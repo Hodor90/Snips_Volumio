@@ -9,7 +9,7 @@ import io
 
 CONFIG_INI = "config.ini"
 
-class Volumio(object):
+class Volumio():
     """Class used to wrap action code with mqtt connection
         
         Please change the name refering to your application
