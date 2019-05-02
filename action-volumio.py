@@ -30,7 +30,7 @@ class Volumio(object):
     # --> Sub callback function, one per intent
     def intent_play_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "")
+        hermes.publish_end_session(intent_message.session_id, "Play")
         
         # action code goes here...
         print '[Received] intent: {}'.format(intent_message.intent.intent_name)
@@ -40,7 +40,7 @@ class Volumio(object):
 
     def intent_stop_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "")
+        hermes.publish_end_session(intent_message.session_id, "Stop")
 
         # action code goes here...
         print '[Received] intent: {}'.format(intent_message.intent.intent_name)
