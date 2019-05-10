@@ -6,6 +6,7 @@ from hermes_python.hermes import Hermes
 from hermes_python.ontology import *
 from hermes_python.ffi.utils import MqttOptions
 import io
+import requests
 
 CONFIG_INI = "config.ini"
 
@@ -35,6 +36,7 @@ class Volumio():
         hermes.publish_end_session(intent_message.session_id, "Play")
 
         # action code goes here...
+        requests.get(self.base_api_url + "play")
 
         # if need to speak the execution result by tts
         hermes.publish_start_session_notification(intent_message.site_id, "Action1 has been done", "")
@@ -44,6 +46,7 @@ class Volumio():
         hermes.publish_end_session(intent_message.session_id, "Stop")
 
         # action code goes here...
+        requests.get(self.base_api_url + "stop")
 
         # if need to speak the execution result by tts
         hermes.publish_start_session_notification(intent_message.site_id, "Action2 has been done", "")
