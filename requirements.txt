@@ -1,3 +1,4 @@
 # Bindings for the hermes protocol 
+requests
 
 # More dependency goes here.. 
