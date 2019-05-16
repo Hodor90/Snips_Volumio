@@ -24,8 +24,8 @@ class Volumio(object):
         except:
             self.config = None
 
-        self.base_api_url = "http://{0}:{1}/api/v1/commands/?cmd=".format(self.config['global']['host'],
-                                                                          self.config['global']['port'])
+        self.base_api_url = "http://{0}:{1}/api/v1/commands/?cmd=".format(self.config["global"]["host"],
+                                                                          self.config["global"]["port"])
 
         # start listening to MQTT
         self.start_blocking()
@@ -56,18 +56,18 @@ class Volumio(object):
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self, hermes, intent_message):
         coming_intent = intent_message.intent.intent_name
-        if coming_intent == 'Play':
+        if coming_intent == "Hodor:Play":
             self.intent_play_callback(hermes, intent_message)
-        if coming_intent == 'Stop':
+        if coming_intent == "Hodor:Stop":
             self.intent_stop_callback(hermes, intent_message)
 
         # more callback and if condition goes here...
 
     # --> Register callback function and start MQTT
     def start_blocking(self):
-        mqtt_addr = "{}:{}".format(self.config['global']['mqtt_ip_addr'], self.config['global']['mqtt_port'])
+        mqtt_addr = "{}:{}".format(self.config["global"]["mqtt_ip_addr"], self.config["global"]["mqtt_port"])
 
-        mqtt_opts = MqttOptions(username=self.config['secret']['mqtt_user'], password=self.config['secret']['mqtt_pw'],
+        mqtt_opts = MqttOptions(username=self.config["secret"]["mqtt_user"], password=self.config["secret"]["mqtt_pw"],
                                 broker_address=mqtt_addr)
         with Hermes(mqtt_options=mqtt_opts) as h:
             h.subscribe_intents(self.master_intent_callback).start()
