@@ -11,7 +11,7 @@ import requests
 CONFIG_INI = "config.ini"
 
 
-class Volumio:
+class Volumio(object):
     """Class used to wrap action code with mqtt connection
         
         Please change the name refering to your application
