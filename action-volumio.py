@@ -36,22 +36,73 @@ class Volumio(object):
         hermes.publish_end_session(intent_message.session_id, "Play")
 
         # action code goes here...
-        requests.get(self.base_api_url + "play")
+        response = requests.get(self.base_api_url + "play")
+        responsejson = response.json()
 
-        # if need to speak the execution result by tts
-        hermes.publish_start_session_notification(intent_message.site_id, "Action1 has been done", "")
+        if responsejson["response"] == "play Success":
+            # answer success
+            hermes.publish_start_session_notification(intent_message.site_id, "Ok, ich starte die Wiedergabe.", "")
 
     def intent_stop_callback(self, hermes, intent_message):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "Stop")
 
         # action code goes here...
-        requests.get(self.base_api_url + "stop")
+        response = requests.get(self.base_api_url + "stop")
+        responsejson = response.json()
 
-        # if need to speak the execution result by tts
-        hermes.publish_start_session_notification(intent_message.site_id, "Action2 has been done", "")
+        if responsejson["response"] == "stop Success":
+            # answer success
+            hermes.publish_start_session_notification(intent_message.site_id, "Ok, ich stope die Wiedergabe.", "")
 
-    # More callback function goes here...
+    def intent_pause_callback(self, hermes, intent_message):
+        # terminate the session first if not continue
+        hermes.publish_end_session(intent_message.session_id, "Pause")
+
+        # action code goes here...
+        response = requests.get(self.base_api_url + "pause")
+        responsejson = response.json()
+
+        if responsejson["response"] == "pause Success":
+            # answer success
+            hermes.publish_start_session_notification(intent_message.site_id, "Ok, ich pausiere die Wiedergabe.", "")
+
+    def intent_prev_callback(self, hermes, intent_message):
+        # terminate the session first if not continue
+        hermes.publish_end_session(intent_message.session_id, "Prev")
+
+        # action code goes here...
+        response = requests.get(self.base_api_url + "prev")
+        responsejson = response.json()
+
+        if responsejson["response"] == "prev Success":
+            # answer success
+            hermes.publish_start_session_notification(intent_message.site_id, "Ok, ich spiele die vorherige Wiedergabe.", "")
+
+    def intent_next_callback(self, hermes, intent_message):
+        # terminate the session first if not continue
+        hermes.publish_end_session(intent_message.session_id, "Next")
+
+        # action code goes here...
+        response = requests.get(self.base_api_url + "next")
+        responsejson = response.json()
+
+        if responsejson["response"] == "next Success":
+            # answer success
+            hermes.publish_start_session_notification(intent_message.site_id, "Ok, ich spiele die nächste Wiedergabe.", "")
+
+    def intent_volume_callback(self, hermes, intent_message):
+        # terminate the session first if not continue
+        hermes.publish_end_session(intent_message.session_id, "Volume")
+
+        # action code goes here...
+        response = requests.get(self.base_api_url + "volume&volume={0}".format(intent_message.slots.volume))
+        responsejson = response.json()
+
+        if responsejson["response"] == "volume Success":
+            # answer success
+            hermes.publish_start_session_notification(intent_message.site_id, "Ok, lautstärke ist jetzt bei {0}.".format(intent_message.slots.volume), "")
+
 
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self, hermes, intent_message):
@@ -60,8 +111,14 @@ class Volumio(object):
             self.intent_play_callback(hermes, intent_message)
         if coming_intent == "Hodor:Stop":
             self.intent_stop_callback(hermes, intent_message)
-
-        # more callback and if condition goes here...
+        if coming_intent == "Hodor:Pause":
+            self.intent_pause_callback(hermes, intent_message)
+        if coming_intent == "Hodor:Prev":
+            self.intent_prev_callback(hermes, intent_message)
+        if coming_intent == "Hodor:Next":
+            self.intent_next_callback(hermes, intent_message)
+        if coming_intent == "Hodor:Volume":
+            self.intent_volume_callback(hermes, intent_message)
 
     # --> Register callback function and start MQTT
     def start_blocking(self):
