@@ -3,7 +3,6 @@
 
 from snipsTools import SnipsConfigParser
 from hermes_python.hermes import Hermes
-from word2number import w2n
 from hermes_python.ontology import *
 from hermes_python.ffi.utils import MqttOptions
 import io
@@ -96,7 +95,7 @@ class Volumio(object):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "")
 
-        volumeNumber = w2n.word_to_num(intent_message.slots.volume)
+        volumeNumber = intent_message.slots.volume
 
         # action code goes here...
         if isinstance(volumeNumber, int):
