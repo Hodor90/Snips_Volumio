@@ -3,6 +3,7 @@
 
 from snipsTools import SnipsConfigParser
 from hermes_python.hermes import Hermes
+from word2number import w2n
 from hermes_python.ontology import *
 from hermes_python.ffi.utils import MqttOptions
 import io
@@ -33,7 +34,7 @@ class Volumio(object):
     # --> Sub callback function, one per intent
     def intent_play_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "Play")
+        hermes.publish_end_session(intent_message.session_id, "")
 
         # action code goes here...
         response = requests.get(self.base_api_url + "play")
@@ -45,7 +46,7 @@ class Volumio(object):
 
     def intent_stop_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "Stop")
+        hermes.publish_end_session(intent_message.session_id, "")
 
         # action code goes here...
         response = requests.get(self.base_api_url + "stop")
@@ -57,7 +58,7 @@ class Volumio(object):
 
     def intent_pause_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "Pause")
+        hermes.publish_end_session(intent_message.session_id, "")
 
         # action code goes here...
         response = requests.get(self.base_api_url + "pause")
@@ -69,7 +70,7 @@ class Volumio(object):
 
     def intent_prev_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "Prev")
+        hermes.publish_end_session(intent_message.session_id, "")
 
         # action code goes here...
         response = requests.get(self.base_api_url + "prev")
@@ -81,7 +82,7 @@ class Volumio(object):
 
     def intent_next_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "Next")
+        hermes.publish_end_session(intent_message.session_id, "")
 
         # action code goes here...
         response = requests.get(self.base_api_url + "next")
@@ -93,15 +94,18 @@ class Volumio(object):
 
     def intent_volume_callback(self, hermes, intent_message):
         # terminate the session first if not continue
-        hermes.publish_end_session(intent_message.session_id, "Volume")
+        hermes.publish_end_session(intent_message.session_id, "")
+
+        volumeNumber = w2n.word_to_num(intent_message.slots.volume)
 
         # action code goes here...
-        response = requests.get(self.base_api_url + "volume&volume={0}".format(intent_message.slots.volume))
-        responsejson = response.json()
+        if isinstance(volumeNumber, int):
+            response = requests.get(self.base_api_url + "volume&volume={0}".format())
+            responsejson = response.json()
 
-        if responsejson["response"] == "volume Success":
-            # answer success
-            hermes.publish_start_session_notification(intent_message.site_id, "Ok, lautstärke ist jetzt bei {0}.".format(intent_message.slots.volume), "")
+            if responsejson["response"] == "volume Success":
+                # answer success
+                hermes.publish_start_session_notification(intent_message.site_id, "Ok, Lautstärke ist jetzt bei {0}.".format(intent_message.slots.volume), "")
 
 
     # --> Master callback function, triggered everytime an intent is recognized
