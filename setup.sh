@@ -19,9 +19,7 @@ if [ -f "$PYTHON" ]; then
     fi
 
     # Activate the virtual environment and install requirements.
-    # shellcheck disable=SC1090
     . $VENV/bin/activate
-    pip3 install wheel
     pip3 install -r requirements.txt
 
 else
