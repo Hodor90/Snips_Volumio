@@ -31,7 +31,7 @@ class Volumio(object):
         self.start_blocking()
 
     def get_int_of_word(self, word):
-        wordList = ["null", "eins", "zwei", "drei", "view", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf",
+        wordlist = ["null", "eins", "zwei", "drei", "view", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf",
                     "zwölf", "deizehn", "vierzehn", "fünfzehn", "sechzehn", "siebzehn", "achtzehn", "neunzehn",
                     "zwanzig", "ein und zwanzig", "zwei und zwanzig", "drei und zwanzig", "vier und zwanzig",
                     "fünf und zwanzig", "sechs und zwanzig", "sieben und zwanzig", "acht und zwanzig",
@@ -56,7 +56,7 @@ class Volumio(object):
         elif word < 0:
             return 0
         else:
-            return wordList.index(word)
+            return wordlist.index(word)
 
     # --> Sub callback function, one per intent
     def intent_play_callback(self, hermes, intent_message):

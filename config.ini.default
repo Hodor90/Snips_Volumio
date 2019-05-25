@@ -1,0 +1,9 @@
+[global]
+host=volumio.local
+port=3000
+mqtt_ip_addr=localhost
+mqtt_port=1883
+
+[secret]
+mqtt_user=
+mqtt_pw=
