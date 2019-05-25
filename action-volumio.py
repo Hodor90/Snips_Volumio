@@ -30,7 +30,8 @@ class Volumio(object):
         # start listening to MQTT
         self.start_blocking()
 
-    def get_int_of_word(self, word):
+    @staticmethod
+    def get_int_of_word(word):
         wordlist = ["null", "eins", "zwei", "drei", "view", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf",
                     "zwölf", "deizehn", "vierzehn", "fünfzehn", "sechzehn", "siebzehn", "achtzehn", "neunzehn",
                     "zwanzig", "ein und zwanzig", "zwei und zwanzig", "drei und zwanzig", "vier und zwanzig",
@@ -128,15 +129,15 @@ class Volumio(object):
         volumeNumber = self.get_int_of_word(intent_message.slots.volume)
 
         # action code goes here...
-        if isinstance(volumeNumber, int):
-            response = requests.get(self.base_api_url + "volume&volume={0}".format(volumeNumber))
-            responsejson = response.json()
+        #if isinstance(volumeNumber, int):
+        response = requests.get(self.base_api_url + "volume&volume={0}".format(volumeNumber))
+        responsejson = response.json()
 
-            if responsejson["response"] == "volume Success":
-                # answer success
-                hermes.publish_start_session_notification(intent_message.site_id,
-                                                          "Ok, Lautstärke ist jetzt bei {0}.".format(
-                                                              intent_message.slots.volume), "")
+        if responsejson["response"] == "volume Success":
+            # answer success
+            hermes.publish_start_session_notification(intent_message.site_id,
+                                                      "Ok, Lautstärke ist jetzt bei {0}.".format(
+                                                          intent_message.slots.volume), "")
 
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self, hermes, intent_message):
