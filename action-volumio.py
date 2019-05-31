@@ -52,11 +52,7 @@ class Volumio(object):
                     "zwei und neunzig", "drei und neunzig", "vier und neunzig", "fünf und neunzig", "sechs und neunzig",
                     "sieben und neunzig", "acht und neunzig", "neun und neunzig", "einhundert"]
 
-        if word > 100:
-            return 100
-        elif word < 0:
-            return 0
-        else:
+        if word in wordlist:
             return wordlist.index(word)
 
     # --> Sub callback function, one per intent
@@ -129,15 +125,15 @@ class Volumio(object):
         volumeNumber = self.get_int_of_word(intent_message.slots.volume)
 
         # action code goes here...
-        #if isinstance(volumeNumber, int):
-        response = requests.get(self.base_api_url + "volume&volume={0}".format(volumeNumber))
-        responsejson = response.json()
+        if volumeNumber is not None:
+            response = requests.get(self.base_api_url + "volume&volume={0}".format(volumeNumber))
+            responsejson = response.json()
 
-        if responsejson["response"] == "volume Success":
-            # answer success
-            hermes.publish_start_session_notification(intent_message.site_id,
-                                                      "Ok, Lautstärke ist jetzt bei {0}.".format(
-                                                          intent_message.slots.volume), "")
+            if responsejson["response"] == "volume Success":
+                # answer success
+                hermes.publish_start_session_notification(intent_message.site_id,
+                                                          "Ok, Lautstärke ist jetzt bei {0}.".format(
+                                                              intent_message.slots.volume), "")
 
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self, hermes, intent_message):
