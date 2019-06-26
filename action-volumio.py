@@ -128,7 +128,7 @@ class Volumio(object):
         #if volumenumber is not None:
         if intent_message.slots.volume is not None:
             #response = requests.get(self.base_api_url + "volume&volume={0}".format(volumenumber))
-            response = requests.get(self.base_api_url + "volume&volume={0}".format(intent_message.slots.volume.first().value))
+            response = requests.get(self.base_api_url + "volume&volume={0}".format(intent_message.slots.volume))
             responsejson = response.json()
 
             if responsejson["response"] == "volume Success":
