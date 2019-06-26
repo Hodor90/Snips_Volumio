@@ -134,7 +134,7 @@ class Volumio(object):
             if responsejson["response"] == "volume Success":
                 # answer success
                 hermes.publish_start_session_notification(intent_message.site_id,
-                                                          "Ok, Lautstärke ist jetzt bei {}.".format(
+                                                          "Ok, Lautstärke ist jetzt bei {}".format(
                                                               int(intent_message.slots.volume.first().value)), "")
 
     # --> Master callback function, triggered everytime an intent is recognized
