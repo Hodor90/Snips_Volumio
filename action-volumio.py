@@ -128,14 +128,14 @@ class Volumio(object):
         #if volumenumber is not None:
         if intent_message.slots.volume is not None:
             #response = requests.get(self.base_api_url + "volume&volume={0}".format(volumenumber))
-            response = requests.get(self.base_api_url + "volume&volume={}".format(int(intent_message.slots.volume)))
+            response = requests.get(self.base_api_url + "volume&volume={}".format(int(intent_message.slots.volume.value)))
             responsejson = response.json()
 
             if responsejson["response"] == "volume Success":
                 # answer success
                 hermes.publish_start_session_notification(intent_message.site_id,
                                                           "Ok, Lautstärke ist jetzt bei {}.".format(
-                                                              int(intent_message.slots.volume)), "")
+                                                              int(intent_message.slots.volume.value)), "")
 
     # --> Master callback function, triggered everytime an intent is recognized
     def master_intent_callback(self, hermes, intent_message):
