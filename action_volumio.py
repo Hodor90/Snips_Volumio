@@ -7,15 +7,12 @@ from hermes_python.ontology import *
 from hermes_python.ffi.utils import MqttOptions
 import io
 import requests
+from unittest import mock
 
 CONFIG_INI = "config.ini"
 
 
 class Volumio(object):
-    """Class used to wrap action code with mqtt connection
-        
-        Please change the name refering to your application
-    """
 
     def __init__(self):
         # get the configuration if needed
@@ -60,9 +57,7 @@ class Volumio(object):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "")
 
-        # action code goes here...
-        response = requests.get(self.base_api_url + "play")
-        responsejson = response.json()
+        responsejson = self.makeVolumioApiCall("play")
 
         if responsejson["response"] == "play Success":
             # answer success
@@ -72,9 +67,7 @@ class Volumio(object):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "")
 
-        # action code goes here...
-        response = requests.get(self.base_api_url + "stop")
-        responsejson = response.json()
+        responsejson = self.makeVolumioApiCall("stop")
 
         if responsejson["response"] == "stop Success":
             # answer success
@@ -84,9 +77,7 @@ class Volumio(object):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "")
 
-        # action code goes here...
-        response = requests.get(self.base_api_url + "pause")
-        responsejson = response.json()
+        responsejson = self.makeVolumioApiCall("pause")
 
         if responsejson["response"] == "pause Success":
             # answer success
@@ -96,9 +87,7 @@ class Volumio(object):
         # terminate the session first if not continue
         hermes.publish_end_session(intent_message.session_id, "")
 
-        # action code goes here...
-        response = requests.get(self.base_api_url + "prev")
-        responsejson = response.json()
+        responsejson = self.makeVolumioApiCall("prev")
 
         if responsejson["response"] == "prev Success":
             # answer success
@@ -110,8 +99,7 @@ class Volumio(object):
         hermes.publish_end_session(intent_message.session_id, "")
 
         # action code goes here...
-        response = requests.get(self.base_api_url + "next")
-        responsejson = response.json()
+        responsejson = self.makeVolumioApiCall("next")
 
         if responsejson["response"] == "next Success":
             # answer success
@@ -127,9 +115,8 @@ class Volumio(object):
         # action code goes here...
         #if volumenumber is not None:
         if intent_message.slots.volume is not None:
-            #response = requests.get(self.base_api_url + "volume&volume={0}".format(volumenumber))
-            response = requests.get(self.base_api_url + "volume&volume={}".format(int(intent_message.slots.volume.first().value)))
-            responsejson = response.json()
+            #"volume&volume={0}".format(volumenumber)
+            responsejson = self.makeVolumioApiCall("volume&volume={}".format(int(intent_message.slots.volume.first().value)))
 
             if responsejson["response"] == "volume Success":
                 # answer success
@@ -153,6 +140,11 @@ class Volumio(object):
         if coming_intent == "Hodor:Volume":
             self.intent_volume_callback(hermes, intent_message)
 
+    def makeVolumioApiCall(self, method):
+        # action code goes here...
+        response = requests.get(self.base_api_url + method)
+        return response.json()
+
     # --> Register callback function and start MQTT
     def start_blocking(self):
         mqtt_addr = "{}:{}".format(self.config["global"]["mqtt_ip_addr"], self.config["global"]["mqtt_port"])
@@ -161,7 +153,6 @@ class Volumio(object):
                                 broker_address=mqtt_addr)
         with Hermes(mqtt_options=mqtt_opts) as h:
             h.subscribe_intents(self.master_intent_callback).start()
-
 
 if __name__ == "__main__":
     Volumio()
